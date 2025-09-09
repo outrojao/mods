@@ -1,2 +1,2 @@
 # mods
-some personal go.mod
+Some Go modules for personal projects and studies
