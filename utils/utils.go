@@ -5,14 +5,12 @@ import (
 	"fmt"
 	"os"
 	"reflect"
-	"regexp"
 	"strconv"
 )
 
 // Função genérica para obter entrada do usuário
 func GetUserInput[T any](message string) (input T) {
 	scanner := bufio.NewScanner(os.Stdin)
-	letterRegexp := regexp.MustCompile(`^[A-Za-zÀ-ÿ\s]+$`)
 	for {
 		fmt.Print(message)
 		if !scanner.Scan() {
@@ -24,11 +22,6 @@ func GetUserInput[T any](message string) (input T) {
 		var val any
 		switch reflect.TypeOf(input).Kind() {
 		case reflect.String:
-			matched := letterRegexp.MatchString(raw)
-			if !matched {
-				fmt.Println("Por favor, digite apenas letras.")
-				continue
-			}
 			val = raw
 		case reflect.Int:
 			i, err := strconv.Atoi(raw)
@@ -64,7 +57,6 @@ func GetUserInput[T any](message string) (input T) {
 // Função genérica para obter entrada do usuário, aceitando valor nulo
 func GetUserInputAcceptNull[T any](message string) (input *T) {
 	scanner := bufio.NewScanner(os.Stdin)
-	letterRegexp := regexp.MustCompile(`^[A-Za-zÀ-ÿ\s]+$`)
 	for {
 		fmt.Print(message)
 		if !scanner.Scan() {
@@ -80,11 +72,6 @@ func GetUserInputAcceptNull[T any](message string) (input *T) {
 
 		switch reflect.TypeOf(*new(T)).Kind() {
 		case reflect.String:
-			matched := letterRegexp.MatchString(raw)
-			if !matched {
-				fmt.Println("Por favor, digite apenas letras.")
-				continue
-			}
 			val = raw
 		case reflect.Int:
 			i, err := strconv.Atoi(raw)
