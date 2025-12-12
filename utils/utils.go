@@ -19,14 +19,14 @@ func GetUserInput[T any](message string) (input T) {
 			continue
 		}
 		raw := strings.TrimSpace(scanner.Text())
+		if raw == "" {
+			fmt.Println("Entrada não pode ser vazia. Tente novamente.")
+			continue
+		}
 
 		var val any
 		switch reflect.TypeFor[T]().Kind() {
 		case reflect.String:
-			if raw == "" {
-				fmt.Println("Entrada inválida. Tente novamente.")
-				continue
-			}
 			val = raw
 		case reflect.Int:
 			i, err := strconv.Atoi(raw)
