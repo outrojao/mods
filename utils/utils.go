@@ -6,6 +6,7 @@ import (
 	"os"
 	"reflect"
 	"strconv"
+	"strings"
 )
 
 // Função genérica para obter entrada do usuário
@@ -17,11 +18,15 @@ func GetUserInput[T any](message string) (input T) {
 			fmt.Println("Entrada inválida. Tente novamente.")
 			continue
 		}
-		raw := scanner.Text()
+		raw := strings.TrimSpace(scanner.Text())
 
 		var val any
-		switch reflect.TypeOf(input).Kind() {
+		switch reflect.TypeFor[T]().Kind() {
 		case reflect.String:
+			if raw == "" {
+				fmt.Println("Entrada inválida. Tente novamente.")
+				continue
+			}
 			val = raw
 		case reflect.Int:
 			i, err := strconv.Atoi(raw)
@@ -55,7 +60,7 @@ func GetUserInput[T any](message string) (input T) {
 }
 
 // Função genérica para obter entrada do usuário, aceitando valor nulo
-func GetUserInputAcceptNull[T any](message string) (input *T) {
+func GetUserInputAcceptNull[T any](message string) (input T) {
 	scanner := bufio.NewScanner(os.Stdin)
 	for {
 		fmt.Print(message)
@@ -63,14 +68,15 @@ func GetUserInputAcceptNull[T any](message string) (input *T) {
 			fmt.Println("Entrada inválida. Tente novamente.")
 			continue
 		}
-		raw := scanner.Text()
+		raw := strings.TrimSpace(scanner.Text())
 
 		var val any
 		if raw == "" {
-			return nil
+			var zero T
+			return zero
 		}
 
-		switch reflect.TypeOf(*new(T)).Kind() {
+		switch reflect.TypeFor[T]().Kind() {
 		case reflect.String:
 			val = raw
 		case reflect.Int:
@@ -100,7 +106,7 @@ func GetUserInputAcceptNull[T any](message string) (input *T) {
 		}
 
 		v := val.(T)
-		input = &v
+		input = v
 		return
 	}
 }
